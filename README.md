@@ -1,5 +1,8 @@
-# Tile.sh
-Bash script to batch split images into tiles
+## What?
+`Tile.sh` splits images into tiles by given dimensions.
+
+## Why?
+Having been given a triple monitor setup, I wanted to use those widescreen wallpapers that stretch across all the displays. However, on Mac you need three separate images in order to do that. Thus I wrote this script.
 
 ![](http://i.imgur.com/oGNlLsX.png)
 
