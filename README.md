@@ -1,14 +1,15 @@
 ## What?
 `Tile.sh` splits images into tiles by given dimensions.
 
-## Why?
-Having been given a triple monitor setup, I wanted to use those widescreen wallpapers that stretch across all the displays. However, on Mac you need three separate images in order to do that. Thus I wrote this script.
-
 ![](http://i.imgur.com/oGNlLsX.png)
+
+## Why?
+Having been given a triple monitor setup, I wanted to use those widescreen wallpapers that stretch across all the displays. However, on Mac you need three separate images in order to do that. ImageMagick can easily do that for one image, but of course I wanted to test out hundreds of wallpapers ^^;  
+Thus I wrote this script.
 
 ## Examples
 
-`./Tile.sh 3 1 monkeyflower.jpg` turns this
+`./Tile.sh 3 1 monkeyflower.jpg` turns this:
 
 ![](http://i.imgur.com/9Hwm2i1.jpg)
 into this:
@@ -17,7 +18,7 @@ Tile 1                                 |  Tile 2                               |
 :-------------------------------------:|:-------------------------------------:|:-------------------------------------:
 ![](http://i.imgur.com/bN0EcDA.jpg)    |  ![](http://i.imgur.com/PgtoBDi.jpg)  |  ![](http://i.imgur.com/bNtA4MF.jpg)
 
-`./Tile.sh 3 2 257828.jpg` turns this
+`./Tile.sh 3 2 257828.jpg` turns this:
 
 ![](http://i.imgur.com/mCGRuRr.jpg)
 into this:
