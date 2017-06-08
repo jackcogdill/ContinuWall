@@ -4,7 +4,7 @@
 ![](http://i.imgur.com/oGNlLsX.png)
 
 ## Why?
-Having been given a triple monitor setup, I wanted to use those widescreen wallpapers that stretch across all the displays. However, on Mac you need three separate images in order to do that. ImageMagick can easily do that for one image, but of course I wanted to test out hundreds of wallpapers ^^;  
+Having been given a triple monitor setup, I wanted to use those widescreen wallpapers that stretch across all the displays. However, on Mac you need three separate images in order to do that. ImageMagick can easily split up an image, but naturally I wanted to test out hundreds of wallpapers ^^;  
 Thus I wrote this script.
 
 ## Examples
