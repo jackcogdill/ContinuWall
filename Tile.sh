@@ -105,7 +105,7 @@ function progressbar() {
 }
 
 function split() {
-	printf "Splitting images into tiles:\n"
+	printf "Splitting images into ${x}x${y} tiles:\n"
 	SECONDS=0
 	converted=0
 

@@ -1,7 +1,7 @@
 # Tile.sh
 Bash script to batch split images into tiles
 
-![](http://i.imgur.com/OkS3qbT.png)
+![](http://i.imgur.com/oGNlLsX.png)
 
 ## Examples
 
