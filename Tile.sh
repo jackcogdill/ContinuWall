@@ -11,7 +11,7 @@ dims=""
 # Check for ImageMagick
 # ====================================
 if ! hash convert 2>/dev/null; then
-	printf "You must have ImageMagick installed to use ${0}"
+	printf "You must have ImageMagick installed to use ${0}\n"
 	exit 1
 fi
 
@@ -190,7 +190,7 @@ elif [ "$1" == "clean" ]; then
 	rm "${prefix}"* 2>/dev/null
 
 	printf "${green}done!${reset}\n"
-elif [ $# -lt 3 ] || [ -f "$1" ] || [ -f "$2" ]; then
+elif [ $# -lt 3 ] || ! [[ $1 =~ ^[0-9]+$ ]] || ! [[ $2 =~ ^[0-9]+$ ]]; then
 	printf "$usage\n"
 else
 	x="$1"
