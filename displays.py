@@ -5,6 +5,9 @@ class Display:
 		self._x = x
 		self._y = y
 
+	def __str__(self):
+		return '%sx%s' % (self._w, self._h)
+
 	def getw(self): return self._w
 	def geth(self): return self._h
 	def getx(self): return self._x

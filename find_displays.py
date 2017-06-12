@@ -74,7 +74,7 @@ def print_arrangement(_arrangement, max_height=12):
 
 	print(color('cyan'))
 	for display in _arrangement:
-		print('%sx%s' % (display.w, display.h), end=' ')
+		print(display, end=' ')
 	print(color('reset'))
 
 	total_lines = max([display.y + display.h for display in arrangement])
