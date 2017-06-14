@@ -1,3 +1,6 @@
+# Compatibility for both Python 2 and 3
+__metaclass__ = type
+
 class Display:
 	def __init__(self, w, h, x, y):
 		self._w = w

@@ -1,3 +1,13 @@
+# Compatibility for both Python 2 and 3
+# -------------------------------------
+from __future__ import absolute_import, print_function
+try:
+	input = raw_input
+except NameError:
+	pass
+# -------------------------------------
+
+
 # Imports
 import os.path
 import subprocess
@@ -16,7 +26,7 @@ if not os.path.isfile(pbuddy):
 try:
 	from subprocess import DEVNULL
 except ImportError:
-	import os.devnull
+	import os
 	DEVNULL = open(os.devnull, 'wb')
 
 def test(command):
@@ -89,12 +99,12 @@ def print_arrangement(_arrangement, max_height=12):
 		horiz        = u'\u2500'
 		vert         = u'\u2502'
 
-		index = 0
+		# Because python 2 cannot use 'nonlocal' keyword
+		outer = { 'index': 0 }
 
 		def prnt_line(str):
-			nonlocal index
-			lines[index] += str
-			index += 1
+			lines[ outer['index'] ] += str
+			outer['index'] += 1
 
 		# y offset
 		for i in range(y):
@@ -107,7 +117,7 @@ def print_arrangement(_arrangement, max_height=12):
 		# Last line
 		prnt_line(bottom_left + horiz * (w - 2) * 2 + bottom_right)
 		# x padding for future displays which go further down
-		while index < total_lines:
+		while outer['index'] < total_lines:
 			prnt_line(' ' * (w - 1) * 2)
 	for num, text in lines.items():
 		print(text)
@@ -157,7 +167,7 @@ def main():
 			fname = '.display_arrangement'
 			try:
 				with open(fname, 'wb') as file:
-					pickle.dump(arrangement, file)
+					pickle.dump(arrangement, file, protocol=2)
 					print(color('Successfully recorded!', 'green'))
 			except Exception:
 				print(color('Error storing display arrangement data in "%s"' % fname, 'red'))
