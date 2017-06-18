@@ -126,7 +126,7 @@ def print_arrangement(_arrangement, max_height=12):
 		print(color('Note: this arrangement may be mirrored', 'yellow'))
 
 def main():
-	arrangement_index = 1
+	arrangement_index = 0
 	found = False
 	while True:
 		prnt_left = 'print :DisplayAnyUserSets:%d:' % arrangement_index
