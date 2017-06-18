@@ -154,7 +154,7 @@ def main():
 			originX = display_attr('OriginX')
 			originY = display_attr('OriginY')
 
-			arrangement.append(Display(width, height, originY, originY))
+			arrangement.append(Display(width, height, originX, originY))
 
 			display += 1
 
