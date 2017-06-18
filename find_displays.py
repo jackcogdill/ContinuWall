@@ -44,12 +44,9 @@ def test(command):
 
 def print_arrangement(_arrangement, max_height=12):
 	# Make a copy of the array to keep the originals intact
-	arrangement = [Display(d.w, d.h, d.x, d.y) for d in _arrangement]
-#====================================================================================
-	# print('Before:')
-	# for display in arrangement:
-	# 	print('(%d, %d)' % (display.x, display.y))
+	arrangement = [Display(d.w, d.h, d.x, d.y, d.mirrored) for d in _arrangement]
 
+	# Make all coordinates positive for printing
 	minx = min([display.x for display in arrangement])
 	miny = min([display.y for display in arrangement])
 	newx = 0 if minx == 0 else -minx
@@ -58,31 +55,21 @@ def print_arrangement(_arrangement, max_height=12):
 		display.x += newx
 		display.y += newy
 
-	# print('After:')
-	# for display in arrangement:
-	# 	print('(%d, %d)' % (display.x, display.y))
-#====================================================================================
-	# print('Before:')
-	# for display in arrangement:
-	# 	print('(%d, %d, %d, %d)' % (display.w, display.h, display.x, display.y))
-
+	# Scale down dimensions to display in terminal
 	maxh = max([display.y + display.h for display in arrangement])
 	div = maxh / max_height
-
 	for display in arrangement:
 		display.w = int(display.w / div)
 		display.h = int(display.h / div)
 		display.x = int(display.x / div)
 		display.y = int(display.y / div)
 
-	# print('After:')
-	# for display in arrangement:
-	# 	print('(%d, %d, %d, %d)' % (display.w, display.h, display.x, display.y))
-#====================================================================================
 	# Draw displays from left to right
 	arrangement.sort(key=lambda display: display.x)
 
 	print(color('cyan'))
+	# Dimensions also same order
+	_arrangement.sort(key=lambda display: display.x)
 	for display in _arrangement:
 		print(display, end=' ')
 	print(color('reset'))
@@ -92,12 +79,18 @@ def print_arrangement(_arrangement, max_height=12):
 	for display in arrangement:
 		(w, h, x, y) = (display.w, display.h, display.x, display.y)
 
-		top_left     = u'\u250c'
-		top_right    = u'\u2510'
-		bottom_left  = u'\u2514'
-		bottom_right = u'\u2518'
-		horiz        = u'\u2500'
-		vert         = u'\u2502'
+		box = {
+			'top_left'    : u'\u250c',
+			'top_right'   : u'\u2510',
+			'bottom_left' : u'\u2514',
+			'bottom_right': u'\u2518',
+			'horiz'       : u'\u2500',
+			'vert'        : u'\u2502'
+		}
+
+		if display.mirrored:
+			for key, val in box.items():
+				box[key] = color(val, 'yellow')
 
 		# Because python 2 cannot use 'nonlocal' keyword
 		outer = { 'index': 0 }
@@ -110,20 +103,20 @@ def print_arrangement(_arrangement, max_height=12):
 		for i in range(y):
 			prnt_line(' ' * (w - 1) * 2)
 		# First line
-		prnt_line(top_left + horiz * (w - 2) * 2 + top_right)
+		prnt_line(box['top_left'] + box['horiz'] * (w - 2) * 2 + box['top_right'])
 		# Middle lines
 		for i in range(h - 2):
-			prnt_line(vert + ' ' * (w - 2) * 2 + vert)
+			prnt_line(box['vert'] + ' ' * (w - 2) * 2 + box['vert'])
 		# Last line
-		prnt_line(bottom_left + horiz * (w - 2) * 2 + bottom_right)
+		prnt_line(box['bottom_left'] + box['horiz'] * (w - 2) * 2 + box['bottom_right'])
 		# x padding for future displays which go further down
 		while outer['index'] < total_lines:
 			prnt_line(' ' * (w - 1) * 2)
 	for num, text in lines.items():
 		print(text)
 
-	if [display.x for display in arrangement].count(0) > 1:
-		print(color('Note: this arrangement may be mirrored', 'yellow'))
+	if any([display.mirrored for display in arrangement]):
+		print('Note: yellow displays are mirrored')
 
 def main():
 	arrangement_index = 0
@@ -134,7 +127,6 @@ def main():
 		if not test('"%s" -c "%s" "%s"' % (pbuddy, prnt_left, prefs)):
 			break
 
-		# subprocess.call('clear', shell=True)
 		print()
 
 		arrangement = []
@@ -149,12 +141,15 @@ def main():
 				).rstrip()
 			)
 
-			width   = display_attr('Width')
-			height  = display_attr('Height')
-			originX = display_attr('OriginX')
-			originY = display_attr('OriginY')
+			mirrored = display_attr('Mirrored') == 1
+			prefix = '' if mirrored else 'Unmirrored'
 
-			arrangement.append(Display(width, height, originX, originY))
+			width   = display_attr(prefix + 'Width')
+			height  = display_attr(prefix + 'Height')
+			originX = display_attr(prefix + 'OriginX')
+			originY = display_attr(prefix + 'OriginY')
+
+			arrangement.append(Display(width, height, originX, originY, mirrored))
 
 			display += 1
 
@@ -180,16 +175,3 @@ def main():
 
 # Run program
 main()
-
-# More testing
-# subprocess.call('clear', shell=True)
-# print('Arrangement at work:')
-# print()
-
-# arrangement = [
-# 	Display(1920, 1200, 0, 0),
-# 	Display(1920, 1200, -1920, 0),
-# 	Display(1440, 900, 1920, 300)
-# ]
-
-# print_arrangement(arrangement)

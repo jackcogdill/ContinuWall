@@ -2,11 +2,12 @@
 __metaclass__ = type
 
 class Display:
-	def __init__(self, w, h, x, y):
+	def __init__(self, w, h, x, y, mirrored):
 		self._w = w
 		self._h = h
 		self._x = x
 		self._y = y
+		self.mirrored = mirrored;
 
 	def __str__(self):
 		return '%sx%s' % (self._w, self._h)
