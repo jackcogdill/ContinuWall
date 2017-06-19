@@ -1,46 +1,43 @@
 # Compatibility for both Python 2 and 3
-# -------------------------------------
+# =======================================
 from __future__ import absolute_import, print_function
 try:
 	input = raw_input
 except NameError:
 	pass
-# -------------------------------------
+# =======================================
 
-
-# Imports
 import os.path
 import subprocess
-from displays import Display
 import pickle
 from colors import color
 
-pbuddy = '/usr/libexec/PlistBuddy'
-prefs  = '/Library/Preferences/com.apple.windowserver.plist'
+# Class compatibility for both Python 2 and 3
+__metaclass__ = type
+class Display:
+	def __init__(self, w, h, x, y, mirrored):
+		self._w = w
+		self._h = h
+		self._x = x
+		self._y = y
+		self.mirrored = mirrored;
 
-if not os.path.isfile(pbuddy):
-	print('Error: could not locate PlistBuddy')
-	exit(1)
+	def __str__(self):
+		return '%sx%s' % (self._w, self._h)
 
-# /dev/null
-try:
-	from subprocess import DEVNULL
-except ImportError:
-	import os
-	DEVNULL = open(os.devnull, 'wb')
+	def getw(self): return self._w
+	def geth(self): return self._h
+	def getx(self): return self._x
+	def gety(self): return self._y
+	def setw(self, value): self._w = value
+	def seth(self, value): self._h = value
+	def setx(self, value): self._x = value
+	def sety(self, value): self._y = value
 
-def test(command):
-	try:
-		subprocess.check_call(
-			command,
-			stdout=DEVNULL,
-			stderr=DEVNULL,
-			shell=True
-		)
-	except subprocess.CalledProcessError:
-		return False
-
-	return True
+	w = property(fget=getw, fset=setw)
+	h = property(fget=geth, fset=seth)
+	x = property(fget=getx, fset=setx)
+	y = property(fget=gety, fset=sety)
 
 def print_arrangement(_arrangement, max_height=12):
 	# Make a copy of the array to keep the originals intact
@@ -67,7 +64,7 @@ def print_arrangement(_arrangement, max_height=12):
 	# Draw displays from left to right
 	arrangement.sort(key=lambda display: display.x)
 
-	print(color('cyan'))
+	print(color('cyan'), end='')
 	# Dimensions also same order
 	_arrangement.sort(key=lambda display: display.x)
 	for display in _arrangement:
@@ -118,7 +115,38 @@ def print_arrangement(_arrangement, max_height=12):
 	if any([display.mirrored for display in arrangement]):
 		print('Note: yellow displays are mirrored')
 
-def main():
+def find():
+	# Setup
+	# ===================================
+	pbuddy = '/usr/libexec/PlistBuddy'
+	prefs  = '/Library/Preferences/com.apple.windowserver.plist'
+
+	if not os.path.isfile(pbuddy):
+		print(color('Error: could not locate PlistBuddy', 'red'))
+		exit(1)
+
+	def test(command):
+		# /dev/null
+		try:
+			from subprocess import DEVNULL
+		except ImportError:
+			import os
+			DEVNULL = open(os.devnull, 'wb')
+
+		try:
+			subprocess.check_call(
+				command,
+				stdout=DEVNULL,
+				stderr=DEVNULL,
+				shell=True
+			)
+		except subprocess.CalledProcessError:
+			return False
+
+		return True
+	# ===================================
+
+	print('Will determine your display arrangement:')
 	arrangement_index = 0
 	found = False
 	while True:
@@ -127,9 +155,8 @@ def main():
 		if not test('"%s" -c "%s" "%s"' % (pbuddy, prnt_left, prefs)):
 			break
 
-		print()
-
 		arrangement = []
+		print()
 
 		display = 0
 		while test('"%s" -c "%s%d" "%s"' % (pbuddy, prnt_left, display, prefs)):
@@ -154,8 +181,8 @@ def main():
 			display += 1
 
 		print_arrangement(arrangement)
-
 		print()
+
 		read = input('Is this your display arrangement? [y/N] ')
 		if read and read in 'yY':
 			found = True
@@ -173,5 +200,4 @@ def main():
 	if not found:
 		print(color('No display arrangement chosen. Nothing recorded.', 'red'))
 
-# Run program
-main()
+	return found
