@@ -23,13 +23,13 @@ def load_data(fname):
 				global arrangement
 				arrangement = pickle.load(file)
 				return True
-		except FileNotFoundError:
+		except IOError:
 			return False
 
 	success = load()
 
 	if success:
-		print(color('Successfully loaded arrangement!', 'green'))
+		print(color('Successfully loaded!', 'green'))
 	elif displays.find():
 		success = load()
 
@@ -40,7 +40,7 @@ def main():
 		print('Could not determine display arrangement.')
 		exit(0)
 
-	print('Your display:')
+	print('Using arrangement:')
 	displays.print_arrangement(arrangement)
 
 # Run
