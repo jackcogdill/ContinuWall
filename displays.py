@@ -63,17 +63,21 @@ def print_arrangement(_arrangement, max_height=12):
 
 	# Draw displays from left to right
 	arrangement.sort(key=lambda display: display.x)
-
-	print(color('cyan'), end='')
-	# Dimensions also same order
 	_arrangement.sort(key=lambda display: display.x)
-	for display in _arrangement:
-		print(display, end=' ')
-	print(color('reset'))
+
+	print_inside = all([len(str(_arrangement[i])) <= arrangement[i].w - 2 for i in range(len(arrangement))])
+	if not print_inside:
+		print(color('cyan'), end='')
+		for display in _arrangement:
+			print(display, end=' ')
+		print(color('reset'))
 
 	total_lines = max([display.y + display.h for display in arrangement])
 	lines = {line:'' for line in range(total_lines)}
-	for display in arrangement:
+	for index in range(len(arrangement)):
+		display = arrangement[index]
+		_display = _arrangement[index]
+
 		(w, h, x, y) = (display.w, display.h, display.x, display.y)
 
 		box = {
@@ -102,8 +106,15 @@ def print_arrangement(_arrangement, max_height=12):
 		# First line
 		prnt_line(box['top_left'] + box['horiz'] * (w - 2) * 2 + box['top_right'])
 		# Middle lines
-		for i in range(h - 2):
-			prnt_line(box['vert'] + ' ' * (w - 2) * 2 + box['vert'])
+		vlines = h - 2
+		vmid = int(vlines / 2) + (0 if vlines % 2 == 0 else 1)
+		for i in range(vlines):
+			text = (
+				str(_display).center((w - 2) * 2, ' ')
+				if (print_inside and i + 1 == vmid)
+				else ' ' * (w - 2) * 2
+			)
+			prnt_line(box['vert'] + text + box['vert'])
 		# Last line
 		prnt_line(box['bottom_left'] + box['horiz'] * (w - 2) * 2 + box['bottom_right'])
 		# x padding for future displays which go further down
