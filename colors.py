@@ -1,23 +1,45 @@
 esc = '\033'
-reset = '%s[0;m' % esc
-default = reset
+reset = '%s[0m' % esc
+
 colors = {
-	'red':    '%s[0;31m' % esc,
-	'green':  '%s[0;32m' % esc,
-	'yellow': '%s[0;33m' % esc,
-	'blue':   '%s[0;34m' % esc,
-	'cyan':   '%s[0;36m' % esc,
-	'reset':  reset
+	'black':   '0',
+	'red':     '1',
+	'green':   '2',
+	'yellow':  '3',
+	'blue':    '4',
+	'magenta': '5',
+	'cyan':    '6',
+	'white':   '7',
+	'reset':   reset
 }
 
-def color(string, name=None):
+def color(string, color_name=None, background=None, bold=False):
 	# Only return the color (no reset) or reset itself
-	if name is None:
-		return colors.get(string, default)
+	if color_name is None and background is None:
+		return colors.get(string)
 	# Sandwich the string in between the color and reset
 	else:
+		prefix = reset
+
+		if string != 'reset':
+			fg_color = (
+				('3%s' % colors.get(color_name))
+				if color_name is not None
+				else '0'
+			)
+			bg_color = (
+				('4%s' % colors.get(background))
+				if background is not None
+				else ''
+			)
+
+			prefix = '%s[%s;%sm' % (esc, fg_color, bg_color)
+
+			if bold:
+				prefix += '%s[1m' % esc
+
 		return '%s%s%s' % (
-			colors.get(name, default),
+			prefix,
 			string,
 			reset
 		)
