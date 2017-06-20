@@ -150,7 +150,7 @@ def print_arrangement(_arrangement, max_height=12):
 		print(line[0])
 
 	if any([display.mirrored for display in arrangement]):
-		print('Note: yellow displays are mirrored')
+		print('Note: %s displays are mirrored' % color('highlighted', 'yellow', 'black'))
 
 def find():
 	# Setup
