@@ -73,7 +73,7 @@ def print_arrangement(_arrangement, max_height=12):
 		print(color('reset'))
 
 	total_lines = max([display.y + display.h for display in arrangement])
-	lines = {line:'' for line in range(total_lines)}
+	lines = {num : ('', 0) for num in range(total_lines)}
 	for index in range(len(arrangement)):
 		display = arrangement[index]
 		_display = _arrangement[index]
@@ -89,50 +89,65 @@ def print_arrangement(_arrangement, max_height=12):
 			'vert'        : u'\u2502'
 		}
 
-		if display.mirrored:
-			for key, val in box.items():
-				box[key] = color(val, 'yellow')
-
 		# Because python 2 cannot use 'nonlocal' keyword
 		outer = { 'index': 0 }
 
-		def prnt_line(str):
+		def prnt_line(text, num):
 			current_line = lines[ outer['index'] ]
+			current_text = current_line[0]
+			current_num  = current_line[1]
 
 			# Multi-layer arrangements overlap with 'x padding' that gets printed
-			if len(current_line) > (x - 1) * 2 and str.strip() != '':
-				current_line = current_line[:(x - 1) * 2]
+			new_start = (x - 1) * 2
+			if (
+				current_num > new_start                and
+				text.strip() != ''                     and # Only replace with non-whitespace
+				current_text[new_start:].strip() == ''     # Only cut off whitespace
+			):
+				current_text = current_text[:new_start]
+				current_num = new_start
 
-			lines[ outer['index'] ] = current_line + str
+			lines[ outer['index'] ] = (current_text + text, current_num + num)
 			outer['index'] += 1
 
 		# y offset
 		for i in range(y):
-			prnt_line(' ' * (w - 1) * 2)
+			n = (w - 1) * 2
+			prnt_line(' ' * n, n)
 
 		# First line
-		prnt_line(box['top_left'] + box['horiz'] * (w - 2) * 2 + box['top_right'])
+		n = (w - 2) * 2
+		prnt_line(box['top_left'] + box['horiz'] * n + box['top_right'], n + 2)
 
 		# Middle lines
 		vlines = h - 2
 		vmid = int(vlines / 2) + (0 if vlines % 2 == 0 else 1)
 		for i in range(vlines):
-			text = (
-				str(_display).center((w - 2) * 2, ' ')
-				if (print_inside and i + 1 == vmid)
-				else ' ' * (w - 2) * 2
-			)
-			prnt_line(box['vert'] + text + box['vert'])
+			text = ''
+			n = (w - 2) * 2
+
+			if (print_inside and i + 1 == vmid):
+				dims = str(_display)
+				text = dims.center(n, ' ')
+
+				if display.mirrored:
+					text = text.replace(dims, color(dims, 'yellow', 'black'))
+			else:
+				text = ' ' * n
+
+			prnt_line(box['vert'] + text + box['vert'], n + 2)
 
 		# Last line
-		prnt_line(box['bottom_left'] + box['horiz'] * (w - 2) * 2 + box['bottom_right'])
+		n = (w - 2) * 2
+		prnt_line(box['bottom_left'] + box['horiz'] * n + box['bottom_right'], n + 2)
 
 		# x padding for future displays which go further down
 		while outer['index'] < total_lines:
-			prnt_line(' ' * (w - 1) * 2)
+			n = (w - 1) * 2
+			prnt_line(' ' * n, n)
 
-	for num, text in lines.items():
-		print(text)
+	for num, line in lines.items():
+		print(line[0])
 
 	if any([display.mirrored for display in arrangement]):
 		print('Note: yellow displays are mirrored')
