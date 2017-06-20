@@ -53,7 +53,7 @@ def print_arrangement(_arrangement, max_height=12):
 		display.y += newy
 
 	# Scale down dimensions to display in terminal
-	maxh = max([display.y + display.h for display in arrangement])
+	maxh = max([display.h for display in arrangement])
 	div = maxh / max_height
 	for display in arrangement:
 		display.w = int(display.w / div)
