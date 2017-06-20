@@ -20,7 +20,7 @@ class Display:
 		self._h = h
 		self._x = x
 		self._y = y
-		self.mirrored = mirrored;
+		self.mirrored = mirrored
 
 	def __str__(self):
 		return '%sx%s' % (self._w, self._h)
@@ -97,7 +97,10 @@ def print_arrangement(_arrangement, max_height=12):
 		outer = { 'index': 0 }
 
 		def prnt_line(str):
-			lines[ outer['index'] ] += str
+			if len(lines[ outer['index'] ]) > (x - 1) * 2 and str.strip() != '':
+				lines[ outer['index'] ] = lines[ outer['index'] ][:(x - 1) * 2] + str
+			else:
+				lines[ outer['index'] ] += str
 			outer['index'] += 1
 
 		# y offset
