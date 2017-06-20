@@ -97,17 +97,22 @@ def print_arrangement(_arrangement, max_height=12):
 		outer = { 'index': 0 }
 
 		def prnt_line(str):
-			if len(lines[ outer['index'] ]) > (x - 1) * 2 and str.strip() != '':
-				lines[ outer['index'] ] = lines[ outer['index'] ][:(x - 1) * 2] + str
-			else:
-				lines[ outer['index'] ] += str
+			current_line = lines[ outer['index'] ]
+
+			# Multi-layer arrangements overlap with 'x padding' that gets printed
+			if len(current_line) > (x - 1) * 2 and str.strip() != '':
+				current_line = current_line[:(x - 1) * 2]
+
+			lines[ outer['index'] ] = current_line + str
 			outer['index'] += 1
 
 		# y offset
 		for i in range(y):
 			prnt_line(' ' * (w - 1) * 2)
+
 		# First line
 		prnt_line(box['top_left'] + box['horiz'] * (w - 2) * 2 + box['top_right'])
+
 		# Middle lines
 		vlines = h - 2
 		vmid = int(vlines / 2) + (0 if vlines % 2 == 0 else 1)
@@ -118,11 +123,14 @@ def print_arrangement(_arrangement, max_height=12):
 				else ' ' * (w - 2) * 2
 			)
 			prnt_line(box['vert'] + text + box['vert'])
+
 		# Last line
 		prnt_line(box['bottom_left'] + box['horiz'] * (w - 2) * 2 + box['bottom_right'])
+
 		# x padding for future displays which go further down
 		while outer['index'] < total_lines:
 			prnt_line(' ' * (w - 1) * 2)
+
 	for num, text in lines.items():
 		print(text)
 
