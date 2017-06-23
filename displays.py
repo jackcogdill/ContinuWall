@@ -99,12 +99,12 @@ def print_arrangement(_arrangement, max_height=12):
 			current_text = current_line[0]
 			current_num  = current_line[1]
 
-			# Multi-layer arrangements overlap with 'x padding' that gets printed
+			# Multi-layer arrangements overlap with padding that gets printed
 			new_start = (x - 1) * 2
 			if (
-				current_num > new_start                and
-				text.strip() != ''                     and # Only replace with non-whitespace
-				current_text[new_start:].strip() == ''     # Only cut off whitespace
+				new_start > 0
+				and current_num > new_start
+				and current_text[new_start:].strip(' ') == '' # Content is only spaces (OK to overwrite)
 			):
 				current_text = current_text[:new_start]
 				current_num = new_start
