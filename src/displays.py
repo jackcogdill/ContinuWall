@@ -3,6 +3,7 @@
 # Compatibility for both Python 2 and 3
 # =======================================
 from __future__ import absolute_import, print_function
+__metaclass__ = type
 try:
 	input = raw_input
 except NameError:
@@ -14,8 +15,6 @@ import subprocess
 import pickle
 from colors import color
 
-# Class compatibility for both Python 2 and 3
-__metaclass__ = type
 class Display:
 	def __init__(self, w, h, x, y, mirrored):
 		self._w = w

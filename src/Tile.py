@@ -1,6 +1,7 @@
 # Compatibility for both Python 2 and 3
 # =======================================
 from __future__ import absolute_import, print_function
+__metaclass__ = type
 try:
 	input = raw_input
 except NameError:
