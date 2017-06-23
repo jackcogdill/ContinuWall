@@ -192,22 +192,23 @@ def find():
 		return True
 	# ===================================
 
+	total_arrangements = 0
+	pbuddy_print = lambda n: 'print :DisplayAnyUserSets:%d:' % n
+	# Determine number of arrangements
+	while test('"%s" -c "%s" "%s"' % (pbuddy, pbuddy_print(total_arrangements), prefs)):
+		total_arrangements += 1
+
 	print('Find your display setup:')
-	arrangement_index = 0
 	found = False
-	while True:
-		prnt_left = 'print :DisplayAnyUserSets:%d:' % arrangement_index
-
-		if not test('"%s" -c "%s" "%s"' % (pbuddy, prnt_left, prefs)):
-			break
-
+	for arrangement_index in range(total_arrangements):
 		arrangement = []
 
+		print_left = pbuddy_print(arrangement_index)
 		display = 0
-		while test('"%s" -c "%s%d" "%s"' % (pbuddy, prnt_left, display, prefs)):
+		while test('"%s" -c "%s%d" "%s"' % (pbuddy, print_left, display, prefs)):
 			display_attr = lambda attr: int(
 				subprocess.check_output(
-					'"%s" -c "%s%d:%s" "%s"' % (pbuddy, prnt_left, display, attr, prefs),
+					'"%s" -c "%s%d:%s" "%s"' % (pbuddy, print_left, display, attr, prefs),
 					universal_newlines=True,
 					shell=True
 				).rstrip()
@@ -230,7 +231,9 @@ def find():
 		print()
 		num_lines += 2 # Two print() 's
 
-		read = input('Is this your arrangement? [y/N] ')
+		prog = '(%d/%d)' % (arrangement_index + 1, total_arrangements)
+		prog = color(prog, 'cyan')
+		read = input('%s Is this your arrangement? [y/N] ' % prog)
 		num_lines += 2 # One for printing the string and one for when you hit enter
 		if read and read in 'yY':
 			found = True
@@ -244,8 +247,6 @@ def find():
 			break
 		else:
 			ANSI.clear(num_lines)
-
-		arrangement_index += 1
 
 	if not found:
 		print(color('No arrangement chosen. Nothing recorded.', 'red'))
