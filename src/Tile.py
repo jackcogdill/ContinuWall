@@ -12,7 +12,7 @@ except NameError:
 # Imports
 import pickle
 import displays
-from colors import color
+from ANSI import color
 
 arrangement = None
 data = '.display_arrangement'

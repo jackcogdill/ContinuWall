@@ -13,7 +13,8 @@ except NameError:
 import os.path
 import subprocess
 import pickle
-from colors import color
+import ANSI
+from ANSI import color
 
 class Display:
 	def __init__(self, w, h, x, y, mirrored):
@@ -41,6 +42,8 @@ class Display:
 	y = property(fget=gety, fset=sety)
 
 def print_arrangement(_arrangement, max_height=12):
+	lines_printed = 0
+
 	# Make a copy of the array to keep the originals intact
 	arrangement = [Display(d.w, d.h, d.x, d.y, d.mirrored) for d in _arrangement]
 
@@ -72,6 +75,7 @@ def print_arrangement(_arrangement, max_height=12):
 		for display in _arrangement:
 			print(display, end=' ')
 		print(color('reset'))
+		lines_printed += 1
 
 	total_lines = max([display.y + display.h for display in arrangement])
 	lines = {num : ('', 0) for num in range(total_lines)}
@@ -149,9 +153,13 @@ def print_arrangement(_arrangement, max_height=12):
 
 	for num, line in lines.items():
 		print(line[0])
+	lines_printed += total_lines
 
 	if any([display.mirrored for display in arrangement]):
 		print('Note: %s displays are mirrored' % color('highlighted', 'yellow', 'black'))
+		lines_printed += 1
+
+	return lines_printed
 
 def find():
 	# Setup
@@ -184,7 +192,7 @@ def find():
 		return True
 	# ===================================
 
-	print('Will determine your display arrangement:')
+	print('Find your display setup:')
 	arrangement_index = 0
 	found = False
 	while True:
@@ -194,7 +202,6 @@ def find():
 			break
 
 		arrangement = []
-		print()
 
 		display = 0
 		while test('"%s" -c "%s%d" "%s"' % (pbuddy, prnt_left, display, prefs)):
@@ -218,10 +225,13 @@ def find():
 
 			display += 1
 
-		print_arrangement(arrangement)
 		print()
+		num_lines = print_arrangement(arrangement)
+		print()
+		num_lines += 2 # Two print() 's
 
-		read = input('Is this your display arrangement? [y/N] ')
+		read = input('Is this your arrangement? [y/N] ')
+		num_lines += 2 # One for printing the string and one for when you hit enter
 		if read and read in 'yY':
 			found = True
 			fname = '.display_arrangement'
@@ -230,12 +240,14 @@ def find():
 					pickle.dump(arrangement, file, protocol=2)
 					print(color('Successfully recorded!', 'green'))
 			except Exception:
-				print(color('Error storing display arrangement data in "%s"' % fname, 'red'))
+				print(color('Error storing arrangement data in "%s"' % fname, 'red'))
 			break
+		else:
+			ANSI.clear(num_lines)
 
 		arrangement_index += 1
 
 	if not found:
-		print(color('No display arrangement chosen. Nothing recorded.', 'red'))
+		print(color('No arrangement chosen. Nothing recorded.', 'red'))
 
 	return found
