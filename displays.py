@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Compatibility for both Python 2 and 3
 # =======================================
 from __future__ import absolute_import, print_function
@@ -81,12 +83,12 @@ def print_arrangement(_arrangement, max_height=12):
 		(w, h, x, y) = (display.w, display.h, display.x, display.y)
 
 		box = {
-			'top_left'    : u'\u250c',
-			'top_right'   : u'\u2510',
-			'bottom_left' : u'\u2514',
-			'bottom_right': u'\u2518',
-			'horiz'       : u'\u2500',
-			'vert'        : u'\u2502'
+			'top_left'    : '┌',
+			'top_right'   : '┐',
+			'bottom_left' : '└',
+			'bottom_right': '┘',
+			'horiz'       : '─',
+			'vert'        : '│'
 		}
 
 		# Because python 2 cannot use 'nonlocal' keyword
