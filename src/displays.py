@@ -72,10 +72,7 @@ def print_arrangement(_arrangement, max_height=12):
 
     print_inside = all([len(str(_arrangement[i])) <= arrangement[i].w - 2 for i in range(len(arrangement))])
     if not print_inside:
-        print(color('cyan'), end='')
-        for display in _arrangement:
-            print(display, end=' ')
-        print(color('reset'))
+        print(ANSI.color(' '.join([str(display) for display in _arrangement]), 'cyan'))
         lines_printed += 1
 
     total_lines = max([display.y + display.h for display in arrangement])
