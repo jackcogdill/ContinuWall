@@ -49,13 +49,8 @@ class Display:
     x = property(fget=getx, fset=setx)
     y = property(fget=gety, fset=sety)
 
-def print_arrangement(_arrangement, max_height=12):
-    lines_printed = 0
-
-    # Make a copy of the array to keep the originals intact
-    arrangement = [Display(d.w, d.h, d.x, d.y, d.mirrored) for d in _arrangement]
-
-    # Make all coordinates positive for printing
+def normalize(arrangement):
+    # Make all coordinates positive
     minx = min([display.x for display in arrangement])
     miny = min([display.y for display in arrangement])
     newx = 0 if minx == 0 else -minx
@@ -63,6 +58,14 @@ def print_arrangement(_arrangement, max_height=12):
     for display in arrangement:
         display.x += newx
         display.y += newy
+
+    return arrangement
+
+def print_arrangement(_arrangement, max_height=12):
+    lines_printed = 0
+
+    # Make a copy of the array to keep the originals intact
+    arrangement = [Display(d.w, d.h, d.x, d.y, d.mirrored) for d in _arrangement]
 
     # Scale down dimensions to display in terminal
     maxh = max([display.h for display in arrangement])
@@ -223,6 +226,9 @@ def find():
             arrangement.append(Display(width, height, originX, originY, mirrored))
 
             display += 1
+
+        # Normalize before printing or saving
+        arrangement = normalize(arrangement)
 
         print()
         num_lines = print_arrangement(arrangement)
