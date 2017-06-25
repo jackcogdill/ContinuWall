@@ -46,7 +46,10 @@ def clear(num_lines=None):
 def color(string, color_name=None, background=None, bold=False):
     # Only return the color (no reset) or reset itself
     if color_name is None and background is None:
-        return COLORS.get(string)
+        return (
+            RESET if string == 'reset'
+            else '%c[3%cm' % (ESC, COLORS.get(string))
+        )
 
     # Sandwich the string in between the color and reset
     else:
