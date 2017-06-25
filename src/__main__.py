@@ -162,10 +162,6 @@ Other commands:
         print(usage)
         exit(0)
     elif command == 'config':
-        try:
-            os.remove(displays.DATA_FILE)
-        except OSError:
-            pass
         displays.find()
         exit(0)
     elif command == 'clean':
