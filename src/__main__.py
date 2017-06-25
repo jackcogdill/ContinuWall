@@ -19,6 +19,7 @@ import subprocess
 import sys
 import time
 import util
+from PIL import Image
 
 ARRANGEMENT = None
 PREFIX = 'TILE_'
@@ -82,8 +83,8 @@ def split():
     converted = 0
 
     total = len(IMAGES)
-    for index, image in enumerate(IMAGES):
-        fname, ext = os.path.splitext(image)
+    for index, image_file in enumerate(IMAGES):
+        fname, ext = os.path.splitext(image_file)
         base = os.path.basename(fname)
 
         skip = False
@@ -92,11 +93,14 @@ def split():
         for some_file in glob.iglob('%s%s*' % (PREFIX, base)):
             skip = True
             break
-        else:
-            # Split the image
+        else: # Split the image
+            image = Image.open(image_file)
+
+            # image.save('%s%s%s' % (PREFIX, base, ext))
+
             converted += 1
 
-        progressbar('"%s"' % fname, index, total, skip=skip)
+        progressbar('"%s"' % image_file, index, total, skip=skip)
 
     end = time.time()
     progressclear()
