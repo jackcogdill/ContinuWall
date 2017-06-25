@@ -19,6 +19,8 @@ def move_down(n):     print(ANSI_CSI_N(n, 'B'))
 def move_forward(n):  print(ANSI_CSI_N(n, 'C'))
 def move_backward(n): print(ANSI_CSI_N(n, 'D'))
 
+def move_column(n):   print(ANSI_CSI_N(n, 'G'), end='')
+
 
 COLORS = {
     'black':   '0',
