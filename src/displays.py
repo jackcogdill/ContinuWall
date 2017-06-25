@@ -17,6 +17,13 @@ import subprocess
 
 DATA_FILE = os.path.expanduser('~') + '/.tileconfig'
 
+# /dev/null
+try:
+    from subprocess import DEVNULL
+except ImportError:
+    import os
+    DEVNULL = open(os.devnull, 'wb')
+
 class Display:
     def __init__(self, w, h, x, y, mirrored):
         self._w = w
@@ -170,13 +177,6 @@ def find():
         exit(1)
 
     def test(command):
-        # /dev/null
-        try:
-            from subprocess import DEVNULL
-        except ImportError:
-            import os
-            DEVNULL = open(os.devnull, 'wb')
-
         try:
             subprocess.check_call(
                 command,
