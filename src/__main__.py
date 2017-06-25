@@ -10,8 +10,6 @@ except NameError:
     pass
 # =======================================
 
-
-# Imports
 import ANSI
 import displays
 import glob
@@ -134,6 +132,7 @@ def load_data():
 
     return success
 
+# Main
 if __name__ == '__main__':
     args = sys.argv
     files = []
