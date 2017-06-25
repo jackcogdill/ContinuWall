@@ -134,7 +134,7 @@ def load_data():
 
     return success
 
-def main():
+if __name__ == '__main__':
     global PREFIX, IMAGES
 
     args = sys.argv
@@ -216,6 +216,3 @@ Other commands:
     ]
 
     split()
-
-# Run
-main()
