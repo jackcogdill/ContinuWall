@@ -23,16 +23,25 @@ ARRANGEMENT = None
 PREFIX = 'TILE_'
 IMAGES = []
 
+# Default columns if cannot determine terminal width
+COLS = 120
+
+def setup():
+    try:
+        global COLS
+        COLS = int(subprocess.check_output(
+            'tput cols',
+            universal_newlines=True,
+            shell=True
+        ))
+    except Exception:
+        pass
+
 def progressbar(left, index, total, right=None, skip=False, charset=3, mid_color=None):
-    cols = int(subprocess.check_output(
-        'tput cols',
-        universal_newlines=True,
-        shell=True
-    ))
     if right is None:
         right = '%s/%s ' % (index, total)
 
-    barload = cols - len(right)
+    barload = COLS - len(right)
     if skip:
         div = int(total / barload)
         if div <= 0:
@@ -48,7 +57,7 @@ def progressbar(left, index, total, right=None, skip=False, charset=3, mid_color
     advance = ['▮', '█', '▰', '⣿', '◼', '.', '⬜'][charset]
     remain = ['▯', '░', '▱', '⣀', '▭', ' ', '⣿'][charset]
 
-    load = cols - len(right) - len(left)
+    load = COLS - len(right) - len(left)
     mod = 1 if load % 2 == 0 else 0
     progress = int(index * barload / total) - len(left)
     if progress < 0:
@@ -208,4 +217,5 @@ Other commands:
         if not file.startswith(PREFIX)
     ]
 
+    setup()
     split()
