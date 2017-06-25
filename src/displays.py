@@ -16,7 +16,7 @@ import pickle
 import ANSI
 from ANSI import color
 
-DATA_FILE = '.display_arrangement'
+DATA_FILE = os.path.expanduser('~') + '/.tileconfig'
 
 class Display:
     def __init__(self, w, h, x, y, mirrored):

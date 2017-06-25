@@ -13,13 +13,15 @@ except NameError:
 import pickle
 import displays
 from ANSI import color
+import sys
+import os
 
 ARRANGEMENT = None
 
-def load_data(fname):
+def load_data():
     def load():
         try:
-            with open(fname, 'rb') as file:
+            with open(displays.DATA_FILE, 'rb') as file:
                 global ARRANGEMENT
                 ARRANGEMENT = pickle.load(file)
                 return True
@@ -36,7 +38,46 @@ def load_data(fname):
     return success
 
 def main():
-    if not load_data(displays.DATA_FILE):
+    prog = sys.argv[0]
+    usage = (
+'''Welcome to image tile manager.
+Split image(s) into tiles for each of your displays.
+
+Usage: {0} <images>
+
+Other options:
+    {0} help                 display this help
+    {0} <images>             split image(s) tiles
+    {0} <prefix> <images>    specify a prefix for the tiles
+    {0} config               change your preferred arrangement
+    {0} clean                remove tiles
+    {0} clean <prefix>       remove tiles with specific prefix'''
+    ).format(prog)
+
+    num_args = len(sys.argv)
+    if num_args == 1:
+        print(usage)
+        exit(0)
+
+    command = sys.argv[1]
+    if command == 'help':
+        print(usage)
+        exit(0)
+    elif command == 'config':
+        try:
+            os.remove(displays.DATA_FILE)
+        except OSError:
+            pass
+        displays.find()
+        exit(0)
+    # elif command == 'clean':
+    #     if num_args == 2:
+    #     elif num_args == 3:
+    #     else:
+    #         print(usage)
+    #         exit(0)
+
+    if not load_data():
         print('Could not determine display arrangement.')
         exit(0)
 
