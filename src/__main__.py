@@ -18,24 +18,12 @@ import pickle
 import subprocess
 import sys
 import time
+import util
 
 ARRANGEMENT = None
 PREFIX = 'TILE_'
 IMAGES = []
-
-# Default columns if cannot determine terminal width
-COLS = 120
-
-def setup():
-    try:
-        global COLS
-        COLS = int(subprocess.check_output(
-            'tput cols',
-            universal_newlines=True,
-            shell=True
-        ))
-    except Exception:
-        pass
+COLS, ROWS = util.getTerminalSize()
 
 def progressbar(left, index, total, right=None, skip=False, charset=3, mid_color=None):
     if right is None:
@@ -217,5 +205,4 @@ Other commands:
         if not file.startswith(PREFIX)
     ]
 
-    setup()
     split()
