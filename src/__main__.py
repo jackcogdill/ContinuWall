@@ -135,8 +135,6 @@ def load_data():
     return success
 
 if __name__ == '__main__':
-    global PREFIX, IMAGES
-
     args = sys.argv
     files = []
 
