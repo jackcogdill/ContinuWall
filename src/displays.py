@@ -10,11 +10,10 @@ except NameError:
     pass
 # =======================================
 
-import os.path
-import subprocess
-import pickle
 import ANSI
-from ANSI import color
+import os.path
+import pickle
+import subprocess
 
 DATA_FILE = os.path.expanduser('~') + '/.tileconfig'
 
@@ -138,7 +137,7 @@ def print_arrangement(_arrangement, max_height=12):
                 text = dims.center(n, ' ')
 
                 if display.mirrored:
-                    text = text.replace(dims, color(dims, 'yellow', 'black'))
+                    text = text.replace(dims, ANSI.color(dims, 'yellow', 'black'))
             else:
                 text = ' ' * n
 
@@ -158,7 +157,7 @@ def print_arrangement(_arrangement, max_height=12):
     lines_printed += total_lines
 
     if any([display.mirrored for display in arrangement]):
-        print('Note: %s displays are mirrored' % color('highlighted', 'yellow', 'black'))
+        print('Note: %s displays are mirrored' % ANSI.color('highlighted', 'yellow', 'black'))
         lines_printed += 1
 
     return lines_printed
@@ -170,7 +169,7 @@ def find():
     prefs  = '/Library/Preferences/com.apple.windowserver.plist'
 
     if not os.path.isfile(pbuddy):
-        print(color('Error: could not locate PlistBuddy', 'red'))
+        print(ANSI.color('Error: could not locate PlistBuddy', 'red'))
         exit(1)
 
     def test(command):
@@ -234,7 +233,7 @@ def find():
         num_lines += 2 # Two print() 's
 
         prog = '(%d/%d)' % (arrangement_index + 1, total_arrangements)
-        prog = color(prog, 'cyan')
+        prog = ANSI.color(prog, 'cyan')
         read = input('%s Is this your arrangement? [y/N] ' % prog)
         num_lines += 2 # One for printing the string and one for when you hit enter
         if read and read in 'yY':
@@ -243,14 +242,14 @@ def find():
             try:
                 with open(fname, 'wb') as file:
                     pickle.dump(arrangement, file, protocol=2)
-                    print(color('Successfully recorded!', 'green'))
+                    print(ANSI.color('Successfully recorded!', 'green'))
             except Exception:
-                print(color('Error storing arrangement data in "%s"' % fname, 'red'))
+                print(ANSI.color('Error storing arrangement data in "%s"' % fname, 'red'))
             break
         else:
             ANSI.clear(num_lines)
 
     if not found:
-        print(color('No arrangement chosen. Nothing recorded.', 'red'))
+        print(ANSI.color('No arrangement chosen. Nothing recorded.', 'red'))
 
     return found
