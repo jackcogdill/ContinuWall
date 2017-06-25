@@ -175,6 +175,7 @@ Other commands:
             exit(0)
 
         print('Removing all tiles with prefix "%s" ...' % PREFIX)
+        removed = 0
         remove_files = glob.glob('%s*' % PREFIX)
         total = len(remove_files)
         for index, file in enumerate(remove_files):
@@ -183,9 +184,11 @@ Other commands:
             except OSError:
                 pass
             progressbar('"%s"' % file, index, total, mid_color='black')
+            removed += 1
 
         progressclear()
         print(ANSI.color('Complete!', 'green'))
+        print('Removed %s files' % ANSI.color(str(removed), 'cyan'))
         exit(0)
     elif command == 'prefix':
         if num_args < 4:
