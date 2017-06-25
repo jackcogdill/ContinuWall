@@ -15,8 +15,10 @@ import displays
 from ANSI import color
 import sys
 import os
+from glob import glob
 
 ARRANGEMENT = None
+PREFIX = 'TILE_'
 
 def load_data():
     def load():
@@ -70,12 +72,25 @@ Other options:
             pass
         displays.find()
         exit(0)
-    # elif command == 'clean':
-    #     if num_args == 2:
-    #     elif num_args == 3:
-    #     else:
-    #         print(usage)
-    #         exit(0)
+    elif command == 'clean':
+        if num_args == 2:
+            pass
+        elif num_args == 3:
+            global PREFIX
+            PREFIX = sys.argv[2]
+        else:
+            print(usage)
+            exit(0)
+
+        print('Removing all tiles with prefix "%s" ...' % PREFIX)
+        for file in glob('%s*' % PREFIX):
+            print('Removing "%s" ...' % file)
+            try:
+                os.remove(file)
+            except OSError:
+                pass
+        print(color('Complete!', 'green'))
+        exit(0)
 
     if not load_data():
         print('Could not determine display arrangement.')
