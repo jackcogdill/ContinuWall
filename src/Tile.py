@@ -14,15 +14,14 @@ import pickle
 import displays
 from ANSI import color
 
-arrangement = None
-data = '.display_arrangement'
+ARRANGEMENT = None
 
 def load_data(fname):
 	def load():
 		try:
 			with open(fname, 'rb') as file:
-				global arrangement
-				arrangement = pickle.load(file)
+				global ARRANGEMENT
+				ARRANGEMENT = pickle.load(file)
 				return True
 		except IOError:
 			return False
@@ -37,12 +36,12 @@ def load_data(fname):
 	return success
 
 def main():
-	if not load_data(data):
+	if not load_data(displays.DATA_FILE):
 		print('Could not determine display arrangement.')
 		exit(0)
 
 	print('Using arrangement:')
-	displays.print_arrangement(arrangement)
+	displays.print_arrangement(ARRANGEMENT)
 
 # Run
 main()

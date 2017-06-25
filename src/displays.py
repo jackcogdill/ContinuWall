@@ -16,6 +16,8 @@ import pickle
 import ANSI
 from ANSI import color
 
+DATA_FILE = '.display_arrangement'
+
 class Display:
 	def __init__(self, w, h, x, y, mirrored):
 		self._w = w
@@ -237,7 +239,7 @@ def find():
 		num_lines += 2 # One for printing the string and one for when you hit enter
 		if read and read in 'yY':
 			found = True
-			fname = '.display_arrangement'
+			fname = DATA_FILE
 			try:
 				with open(fname, 'wb') as file:
 					pickle.dump(arrangement, file, protocol=2)

@@ -20,7 +20,7 @@ def move_forward(n):  print(ANSI_CSI_N(n, 'C'))
 def move_backward(n): print(ANSI_CSI_N(n, 'D'))
 
 
-colors = {
+COLORS = {
 	'black':   '0',
 	'red':     '1',
 	'green':   '2',
@@ -46,7 +46,7 @@ def clear(num_lines=None):
 def color(string, color_name=None, background=None, bold=False):
 	# Only return the color (no reset) or reset itself
 	if color_name is None and background is None:
-		return colors.get(string)
+		return COLORS.get(string)
 
 	# Sandwich the string in between the color and reset
 	else:
@@ -54,12 +54,12 @@ def color(string, color_name=None, background=None, bold=False):
 
 		if string != 'reset':
 			fg_color = (
-				('3%c' % colors.get(color_name))
+				('3%c' % COLORS.get(color_name))
 				if color_name is not None
 				else '0'
 			)
 			bg_color = (
-				('4%c' % colors.get(background))
+				('4%c' % COLORS.get(background))
 				if background is not None
 				else ''
 			)
