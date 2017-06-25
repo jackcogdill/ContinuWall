@@ -186,7 +186,7 @@ Other commands:
                 os.remove(file)
             except OSError:
                 pass
-            progressbar('"%s"' % file, index, total, mid_color='red')
+            progressbar('"%s"' % file, index, total, mid_color='black')
 
         progressclear()
         print(ANSI.color('Complete!', 'green'))
