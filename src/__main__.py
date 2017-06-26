@@ -28,7 +28,7 @@ COLS, ROWS = util.getTerminalSize()
 
 def progressbar(left, index, total, right=None, skip=False, charset=3, mid_color=None):
     if right is None:
-        right = '%s/%s ' % (index, total)
+        right = '%s/%s ' % (index + 1, total) # Because index starts at 0 by default
 
     barload = COLS - len(right)
     if skip:
