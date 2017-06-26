@@ -101,29 +101,37 @@ def split():
             imgw, imgh = image.size
             arrw, arrh = DIMENSIONS
 
+            # Scale arrangement to best fit image
+            # ===================================
             # Ratios
             imgr = imgw / imgh
             arrr = arrw / arrh
+
+            scalew = False
+            scaleh = False
+
             if imgw < arrw and imgh < arrh:
                 if imgr < arrr:
-                    arrw /= arrh / imgh
-                    arrh = imgh
+                    scaleh = True
                 elif imgr > arrr:
-                    arrh /= arrw / imgw
-                    arrw = imgw
+                    scalew = True
             elif imgw > arrw and imgh > arrh:
                 if imgr < arrr:
-                    arrh *= imgw / arrw
-                    arrw = imgw
+                    scalew = True
                 elif imgr > arrr:
-                    arrw *= imgh / arrh
-                    arrh = imgh
+                    scaleh = True
             elif imgw > arrw:
-                arrw *= imgh / arrh
-                arrh = imgh
+                scaleh = True
             elif imgh > arrh:
+                scalew = True
+
+            if scalew:
                 arrh *= imgw / arrw
                 arrw = imgw
+            elif scaleh:
+                arrw *= imgh / arrh
+                arrh = imgh
+            # ===================================
 
             # for index, tile in enumerate(tiles):
             #     tile.save('%s%s_%d%s' % (PREFIX, base, index, ext))
