@@ -61,6 +61,25 @@ def normalize(arrangement):
 
     return arrangement
 
+def arrangement_size(arrangement):
+    from operator import attrgetter
+
+    if all([display.x == 0 for display in arrangement]):
+        width = max([display.w for display in arrangement])
+    else:
+        # Most right display
+        right = max(arrangement, key=attrgetter('x'))
+        width = right.x + right.w
+
+    if all([display.y == 0 for display in arrangement]):
+        height = max([display.h for display in arrangement])
+    else:
+        # Most top display
+        top = max(arrangement, key=attrgetter('y'))
+        height = top.y + top.h
+
+    return (width, height)
+
 def print_arrangement(_arrangement, max_height=12):
     lines_printed = 0
 

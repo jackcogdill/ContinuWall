@@ -22,6 +22,7 @@ import util
 from PIL import Image
 
 ARRANGEMENT = None
+DIMENSIONS = None
 PREFIX = 'TILE_'
 IMAGES = []
 COLS, ROWS = util.getTerminalSize()
@@ -81,8 +82,8 @@ def split():
     print('Splitting images...')
     start = time.time()
     converted = 0
-
     total = len(IMAGES)
+
     for index, image_file in enumerate(IMAGES):
         fname, ext = os.path.splitext(image_file)
         base = os.path.basename(fname)
@@ -95,8 +96,106 @@ def split():
             break
         else: # Split the image
             image = Image.open(image_file)
+            tiles = []
 
-            # image.save('%s%s%s' % (PREFIX, base, ext))
+            imgw, imgh = image.size
+            arrw, arrh = DIMENSIONS
+
+            # <---------- BEFORE ---------->
+            # print(ANSI.color('Before:', 'magenta'))
+            # arr_temp = [displays.Display(imgw, imgh, 0, 0, False), displays.Display(arrw, arrh, 0, 0, False)]
+            # displays.print_arrangement(arr_temp, max_height=8)
+            # <---------------------------->
+
+            # # FIGURE OUT: which is closer. then scale based on
+            # # which one will get more of the image
+            # if imgw < arrw and imgh < arrh:
+
+            # Ratios
+            imgr = imgw / imgh
+            arrr = arrw / arrh
+
+            # print(ANSI.color('Before scaling: img: (%d, %d) arr: (%d, %d)' % (imgw, imgh, arrw, arrh), 'blue'))
+            if imgw < arrw and imgh < arrh:
+                # print('(Scale either)')
+                if imgr < arrr:
+                    arrw /= arrh / imgh
+                    arrh = imgh
+                elif imgr > arrr:
+                    arrh /= arrw / imgw
+                    arrw = imgw
+
+            # elif imgw < arrw:
+            #     print('(Scale horizontally)')
+            #     arrh /= imgw / arrw
+            #     arrw = imgw
+                # print(ANSI.color('Warning: arrangement is wider than image', 'red'))
+                # print('Need to scale down: %f' % f)
+            # elif imgh < arrh:
+            #     print('(Scale vertically)')
+            #     arrw /= imgh / arrh
+            #     arrh = imgh
+                # print(ANSI.color('Warning: arrangement is taller than image', 'red'))
+                # print('Need to scale down: %f' % f)
+            # print(ANSI.color('After scaling: img: (%d, %d) arr: (%d, %d)' % (imgw, imgh, arrw, arrh), 'blue'))
+
+            # FIGURE OUT: which is closer. then center based on
+            # which one will get more of the image
+            # NO. ACTUALLY, only one will work and stay inside the image
+            # scale = None
+#             print(ANSI.color('Before scaling: img: (%d, %d) arr: (%d, %d)' % (imgw, imgh, arrw, arrh), 'blue'))
+            elif imgw > arrw and imgh > arrh:
+#                 print('(Scale either)')
+                if imgr < arrr:
+                    arrh *= imgw / arrw
+                    arrw = imgw
+                elif imgr > arrr:
+                    arrw *= imgh / arrh
+                    arrh = imgh
+                # print(ANSI.color('Need to scale either: img: (%d, %d) arr: (%d, %d)' % (imgw, imgh, arrw, arrh), 'blue'))
+                # scale = (
+                #     (imgw / arrw) if (imgw / imgh > arrw / arrh)
+                #     else (imgh / arrh)
+                # )
+            elif imgw > arrw:
+#                 print('(Scale horizontally)')
+                # print(ANSI.color('Need to scale horiz: img: (%d, %d) arr: (%d, %d)' % (imgw, imgh, arrw, arrh), 'blue'))
+                arrw *= imgh / arrh
+                arrh = imgh
+                # print(ANSI.color('Need to center arrangement horizontally', 'blue'))
+                # print('imgw > arrw: %d > %d' % (imgw, arrw))
+            elif imgh > arrh:
+#                 print('(Scale vertically)')
+                # print(ANSI.color('Need to scale vert: img: (%d, %d) arr: (%d, %d)' % (imgw, imgh, arrw, arrh), 'blue'))
+                arrh *= imgw / arrw
+                arrw = imgw
+                # print(ANSI.color('Need to center arrangement vertically', 'blue'))
+                # print('imgh > arrh: %d > %d' % (imgh, arrh))
+#             print(ANSI.color('After scaling: img: (%d, %d) arr: (%d, %d)' % (imgw, imgh, arrw, arrh), 'blue'))
+            # print(ANSI.color('After %s scaling: img: (%d, %d) arr: (%d, %d)' % ('%smore%s' % (ANSI.color('magenta'), ANSI.color('blue')), imgw, imgh, arrw, arrh), 'blue'))
+
+            # Needs centering:
+            # if arrw > imgw or arrh > imgh:
+            #     print(ANSI.color('ERROR RESIZING ARRANGEMENT TO MATCH IMAGE: "%s"' % image_file, 'red'))
+
+            # if scale is not None:
+            #     print(ANSI.color('Scaling: %s => ' % ANSI.color(str((arrw, arrh)), 'cyan'), 'magenta'), end='')
+            #     arrw *= scale
+            #     arrh *= scale
+            #     print(ANSI.color('%s' % ANSI.color('(%d, %d)' % (arrw, arrh), 'cyan'), 'magenta'))
+
+            # <---------- AFTER ---------->
+            # print(ANSI.color('After:', 'magenta'))
+            # arr_temp2 = [displays.Display(imgw, imgh, 0, 0, False), displays.Display(int(arrw), int(arrh), 0, 0, False)]
+            # if arr_temp[1].w != arr_temp2[1].w or arr_temp[1].h != arr_temp2[1].h:
+            #     print(ANSI.color('blue'), end='')
+            # displays.print_arrangement(arr_temp2, max_height=8)
+            # if arr_temp[1].w != arr_temp2[1].w or arr_temp[1].h != arr_temp2[1].h:
+            #     print(ANSI.color('reset'), end='')
+            # <---------------------------->
+
+            # for index, tile in enumerate(tiles):
+            #     tile.save('%s%s_%d%s' % (PREFIX, base, index, ext))
 
             converted += 1
 
@@ -206,6 +305,9 @@ Other commands:
 
     print('Using arrangement:')
     displays.print_arrangement(ARRANGEMENT)
+
+    # Arrangement dimensions
+    DIMENSIONS = displays.arrangement_size(ARRANGEMENT)
 
     IMAGES = [
         file for file in files
