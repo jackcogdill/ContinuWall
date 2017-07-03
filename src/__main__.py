@@ -183,7 +183,7 @@ def split():
 
     duration = int(end - start)
     print(
-        'Tiled %s files in %s seconds' % (
+        'Tiled %s images in %s seconds' % (
             ANSI.color(str(converted), 'cyan'),
             ANSI.color(str(duration), 'cyan')
         )
