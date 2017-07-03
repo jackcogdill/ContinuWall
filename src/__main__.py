@@ -285,4 +285,8 @@ Other commands:
         if not file.startswith(PREFIX)
     ]
 
-    split()
+    try:
+        split()
+    except KeyboardInterrupt:
+        ANSI.clear(1)
+        print(ANSI.color('Keyboard interrupt. Stopping...', 'red'))
