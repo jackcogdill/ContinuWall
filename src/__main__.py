@@ -11,6 +11,7 @@ except NameError:
 # =======================================
 
 import ANSI
+import copy
 import displays
 import glob
 import os
@@ -109,32 +110,63 @@ def split():
 
             scalew = False
             scaleh = False
+            scale = 1
+            xoffset = 0
+            yoffset = 0
+            new_arrw = 0
+            new_arrh = 0
 
+            # Image is smaller than arrangement
             if imgw < arrw and imgh < arrh:
                 if imgr < arrr:
                     scaleh = True
                 elif imgr > arrr:
                     scalew = True
+            # Image is larger than arrangement
             elif imgw > arrw and imgh > arrh:
                 if imgr < arrr:
                     scalew = True
                 elif imgr > arrr:
                     scaleh = True
+            # Image is wider than arrangement
             elif imgw > arrw:
                 scaleh = True
+            # Image is longer than arrangement
             elif imgh > arrh:
                 scalew = True
 
             if scalew:
-                arrh *= imgw / arrw
-                arrw = imgw
+                scale = imgw * 1.0 / arrw
+                new_arrh = int(arrh * scale)
+                new_arrw = imgw
             elif scaleh:
-                arrw *= imgh / arrh
-                arrh = imgh
-            # ===================================
+                scale = imgh * 1.0 / arrh
+                new_arrw = int(arrw * scale)
+                new_arrh = imgh
 
-            # for index, tile in enumerate(tiles):
-            #     tile.save('%s%s_%d%s' % (PREFIX, base, index, ext))
+            # Center arrangement if image is wider or longer
+            if new_arrw < imgw:
+                xoffset = int((imgw - new_arrw) / 2.0)
+            if new_arrh < imgh:
+                yoffset = int((imgh - new_arrh) / 2.0)
+
+            new_arrangement = copy.deepcopy(ARRANGEMENT)
+
+            for display in new_arrangement:
+                display.w = int(display.w * scale)
+                display.h = int(display.h * scale)
+                display.x = int(display.x * scale) + xoffset
+                display.y = int(display.y * scale) + yoffset
+
+            for tile_index, display in enumerate(new_arrangement):
+                area = (
+                    display.x,              # Start x
+                    display.y,              # Start y
+                    display.x + display.w,  # End x
+                    display.y + display.h,  # End y
+                )
+                tile = image.crop(area)
+                tile.save('%s%s_%d%s' % (PREFIX, base, tile_index, ext))
 
             converted += 1
 
