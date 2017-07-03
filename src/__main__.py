@@ -110,8 +110,8 @@ def split():
             # Scale arrangement to best fit image
             # ===================================
             # Ratios
-            imgr = imgw / imgh
-            arrr = arrw / arrh
+            imgr = imgw * 1.0 / imgh
+            arrr = arrw * 1.0 / arrh
 
             scalew = False
             scaleh = False
@@ -123,13 +123,13 @@ def split():
 
             # Image is smaller than arrangement
             if imgw < arrw and imgh < arrh:
-                if imgr < arrr:
-                    scaleh = True
-                elif imgr > arrr:
+                if imgr <= arrr:
                     scalew = True
+                elif imgr > arrr:
+                    scaleh = True
             # Image is larger than arrangement
             elif imgw > arrw and imgh > arrh:
-                if imgr < arrr:
+                if imgr <= arrr:
                     scalew = True
                 elif imgr > arrr:
                     scaleh = True
