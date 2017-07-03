@@ -7,7 +7,7 @@
     - (will do this automatically the first time)
 
 # Install
-First make sure you have [Pillow](https://pypi.python.org/pypi/Pillow/2.2.1#installation) installed  
+First make sure you have [Pillow](https://pillow.readthedocs.io/en/latest/installation.html#basic-installation) installed (`pip install Pillow`)  
 Then simply run `sudo ./setup install`
 
 # Why?
