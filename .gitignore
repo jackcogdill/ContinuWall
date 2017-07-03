@@ -1,2 +1,4 @@
 src/__pycache__/*
 src/*.pyc
+.DS_Store
+src/.DS_Store
