@@ -11,6 +11,7 @@ except NameError:
 # =======================================
 
 import ANSI
+import copy
 import os.path
 import pickle
 import subprocess
@@ -84,7 +85,7 @@ def print_arrangement(_arrangement, max_height=12):
     lines_printed = 0
 
     # Make a copy of the array to keep the originals intact
-    arrangement = [Display(d.w, d.h, d.x, d.y, d.mirrored) for d in _arrangement]
+    arrangement = copy.deepcopy(_arrangement)
 
     # Scale down dimensions to display in terminal
     maxh = max([display.h for display in arrangement])
