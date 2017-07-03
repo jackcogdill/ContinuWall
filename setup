@@ -1,0 +1,47 @@
+#! /bin/bash
+
+exec="continuwall"
+path="/usr/local/bin/"
+usage="Usage: ${0} <command>\n\
+\n\
+Commands:\n\
+    build       creates a working executable in a directory 'build/'\n\
+    clean       same as uninstall\n\
+    install     installs into ${path}\n\
+    uninstall   removes all build files and executables\n\
+"
+
+if [ "$#" -ne 1 ]; then
+    printf "$usage"
+    exit 0
+fi
+
+function build() {
+    pushd src
+    zip "$exec" *.py
+    mv "${exec}.zip" "$exec"
+    echo "#! /usr/bin/env python" | cat - "$exec" > temp && mv temp "$exec"
+    chmod +x "$exec"
+    popd
+    if [ ! -d "build" ]; then
+        mkdir build
+    fi
+    mv "src/$exec" "build/$exec"
+}
+
+if [ "$1" == "build" ]; then
+    build
+elif [ "$1" == "clean" ] || [ "$1" == "uninstall" ]; then
+    if [ -d "build" ]; then
+        rm -rf build
+    fi
+    if [ -f "${path}${exec}" ]; then
+        rm "${path}${exec}"
+    fi
+elif [ "$1" == "install" ]; then
+    build
+    cp "build/$exec" "${path}${exec}"
+else
+    printf "$usage"
+    exit 0
+fi

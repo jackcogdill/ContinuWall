@@ -213,7 +213,7 @@ if __name__ == '__main__':
     args = sys.argv
     files = []
 
-    prog = args[0]
+    prog = 'continuwall'
     usage = (
 '''Welcome to image tile manager.
 Split image(s) into tiles for each of your displays.
