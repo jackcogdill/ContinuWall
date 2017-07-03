@@ -96,7 +96,12 @@ def split():
             skip = True
             break
         else: # Split the image
-            image = Image.open(image_file)
+            try:
+                image = Image.open(image_file)
+            except IOError:
+                progressclear()
+                print(ANSI.color('Error: could not open "%s"' % image_file, 'red'))
+                continue
             tiles = []
 
             imgw, imgh = image.size
@@ -163,7 +168,7 @@ def split():
                     display.x,              # Start x
                     display.y,              # Start y
                     display.x + display.w,  # End x
-                    display.y + display.h,  # End y
+                    display.y + display.h   # End y
                 )
                 tile = image.crop(area)
                 tile.save('%s%s_%d%s' % (PREFIX, base, tile_index, ext))
@@ -288,5 +293,5 @@ Other commands:
     try:
         split()
     except KeyboardInterrupt:
-        ANSI.clear(1)
+        progressclear()
         print(ANSI.color('Keyboard interrupt. Stopping...', 'red'))
