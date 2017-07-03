@@ -225,6 +225,7 @@ Other commands:
     {0} clean <prefix>              remove tiles with specific prefix
     {0} config                      change your preferred arrangement
     {0} config <base64>             change your config using base64 (from share)
+    {0} config <plist>              configure using this plist file
     {0} help                        display this help
     {0} prefix <prefix> <images>    specify a prefix for the tiles
     {0} share                       get your arrangement in base64 to easily share'''
@@ -243,26 +244,30 @@ Other commands:
         if num_args == 2:
             displays.find()
         elif num_args == 3:
-            import base64
-            data = args[2]
-            fname = displays.DATA_FILE
+            config = args[2]
+            if os.path.isfile(config): # Specified plist file
+                displays.find(config)
+                exit(0)
+            else: # Base64 shared arrangement
+                import base64
+                fname = displays.DATA_FILE
 
-            decoded = ''
-            try:
-                decoded = base64.b64decode(data)
-            except Exception:
-                pass
-
-            if decoded != '':
+                decoded = ''
                 try:
-                    with open(fname, 'wb') as file:
-                        file.write(decoded)
-                        print(ANSI.color('Successfully recorded!', 'green'))
-                        exit(0)
+                    decoded = base64.b64decode(config)
                 except Exception:
                     pass
 
-            print(ANSI.color('Error storing arrangement data in "%s"' % fname, 'red'))
+                if decoded != '':
+                    try:
+                        with open(fname, 'wb') as file:
+                            file.write(decoded)
+                            print(ANSI.color('Successfully recorded!', 'green'))
+                            exit(0)
+                    except Exception:
+                        pass
+
+                print(ANSI.color('Error storing arrangement data in "%s"' % fname, 'red'))
         else:
             print(usage)
         exit(0)

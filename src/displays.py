@@ -189,14 +189,18 @@ def print_arrangement(_arrangement, max_height=12):
 
     return lines_printed
 
-def find():
+def find(prefs=None):
     # Setup
     # ===================================
     pbuddy = '/usr/libexec/PlistBuddy'
-    prefs  = '/Library/Preferences/com.apple.windowserver.plist'
+    if prefs is None:
+        prefs = '/Library/Preferences/com.apple.windowserver.plist'
 
     if not os.path.isfile(pbuddy):
         print(ANSI.color('Error: could not locate PlistBuddy', 'red'))
+        exit(1)
+    if not os.path.isfile(prefs):
+        print(ANSI.color('Error: could not locate display preferences file', 'red'))
         exit(1)
 
     def test(command):
