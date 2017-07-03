@@ -92,7 +92,7 @@ def split():
         skip = False
         # Check if the glob gets expanded to existing files.
         # If it does, skip this image (already tiles for it)
-        for some_file in glob.iglob('%s%s*' % (PREFIX, base)):
+        for some_file in glob.iglob('%s%s_*' % (PREFIX, base)):
             skip = True
             break
         else: # Split the image
