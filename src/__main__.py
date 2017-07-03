@@ -224,8 +224,10 @@ Other commands:
     {0} clean                       remove tiles
     {0} clean <prefix>              remove tiles with specific prefix
     {0} config                      change your preferred arrangement
+    {0} config <base64>             change your config using base64 (from share)
     {0} help                        display this help
-    {0} prefix <prefix> <images>    specify a prefix for the tiles'''
+    {0} prefix <prefix> <images>    specify a prefix for the tiles
+    {0} share                       get your arrangement in base64 to easily share'''
     ).format(prog)
 
     num_args = len(args)
@@ -238,7 +240,31 @@ Other commands:
         print(usage)
         exit(0)
     elif command == 'config':
-        displays.find()
+        if num_args == 2:
+            displays.find()
+        elif num_args == 3:
+            import base64
+            data = args[2]
+            fname = displays.DATA_FILE
+
+            decoded = ''
+            try:
+                decoded = base64.b64decode(data)
+            except Exception:
+                pass
+
+            if decoded != '':
+                try:
+                    with open(fname, 'wb') as file:
+                        file.write(decoded)
+                        print(ANSI.color('Successfully recorded!', 'green'))
+                        exit(0)
+                except Exception:
+                    pass
+
+            print(ANSI.color('Error storing arrangement data in "%s"' % fname, 'red'))
+        else:
+            print(usage)
         exit(0)
     elif command == 'clean':
         if num_args == 2:
@@ -272,6 +298,21 @@ Other commands:
 
         PREFIX = args[2]
         files = args[3:]
+    elif command == 'share':
+        if not load_data():
+            print('Could not determine display arrangement.')
+            exit(0)
+
+        try:
+            with open(displays.DATA_FILE, 'rb') as file:
+                import base64
+                data = file.read()
+                encoded = base64.b64encode(data)
+                print('Here is your shareable arrangement data:')
+                print(encoded)
+        except IOError:
+            print('Could not determine display arrangement.')
+        exit(0)
     else:
         files = args[1:]
 
