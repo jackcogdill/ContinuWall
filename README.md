@@ -10,6 +10,9 @@
 First make sure you have [Pillow](https://pillow.readthedocs.io/en/latest/installation.html#basic-installation) installed (`pip install Pillow`; you may need to do `easy_install pip`)  
 Then simply run `./setup install`
 
+# Usage
+- Be sure to set your wallpaper size to 'Fit to Screen'
+
 # Why?
 Because at work I was given a triple monitor setup, but the displays were not the same size. When I tried to split a wallpaper into even thirds, it didn't look right. Maybe manually cropping a single wallpaper would be easy, but if you're like me, you want a program like this so you can try hundreds ^^;
 
